@@ -10,8 +10,10 @@ import clean_data.clean as ct
 #import model.logistic as ml
 import model.CV_TFIDF as cvtf
 #import model.SGD_Classifier as sg
-import model.SVMClassifier as svc
-import model.ANNClassifier as ann
+#import model.SVMClassifier as svc
+#import model.ANNClassifier as ann
+#import pickle
+from sklearn.externals import joblib
 
 questions = pd.read_excel('questions.xlsx', header = None)
 questions[0] = questions[0].apply(ct.text_clean)
@@ -20,8 +22,13 @@ y = pd.read_excel('answers.xlsx', header = None)
 
 X,cv,tfidf = cvtf.cv_tfidf(questions[0])
 
-trained_model = svc.svm_class(X,y[0])
+#trained_model = svc.svm_class(X,y[0])
 #trained_model = ann.ann_classifier(X,y[0])
+#saved_model = pickle.dumps(trained_model)
+#model_from_pickle = pickle.loads(saved_model)
+#joblib.dump(trained_model, 'saved_model.pkl')
+model_joblib = joblib.load('saved_model.pkl')
+
 entry  = 1
 while entry:
     string = input(':')
@@ -32,5 +39,5 @@ while entry:
         string = ct.text_clean(string)
         string = cv.transform([string,])
         string = tfidf.transform(string)
-        print(trained_model.predict(string)[0])
+        print(model_joblib.predict(string)[0])
     
